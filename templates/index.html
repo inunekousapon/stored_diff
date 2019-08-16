@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </head>
+    <body>
+        <section class="section">
+            <div class="container">
+                <table class="table striped">
+                    <thead>
+                        <tr>
+                            <th>ストアド名</th>
+                            <th>DEVELOP</th>
+                            <th>STAGING</th>
+                            <th>PRODUCTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for procedure in procedure_list %}
+                        <tr{% if procedure.d_ratio < 1.0 or procedure.s_ratio < 1.0 %} class=" red lighten-5"{% endif %}>
+                            <td><a href="./{{ procedure.name }}">{{ procedure.name }}</a></td>
+                            <td>{{ procedure.d_ratio }}</td>
+                            <td>{{ procedure.s_ratio }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </body>
+</html>
