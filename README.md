@@ -33,9 +33,9 @@ python manage.py runserver
 ## ストアドプロシージャ取り込み
 
 ```
-http://localhost:5000/sync
+http://localhost:8000/sync
 ```
 
 ## 表示
 
-http://localhost:5000
+http://localhost:8000
