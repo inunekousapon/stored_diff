@@ -11,6 +11,7 @@ SQLServerのストアドプロシージャを環境別に比較したものを�
 
 ```sh
 git clone https://github.com/inunekousapon/stored_diff.git
+cd stored_diff
 python -m venv venv
 . venv/bin/activate
 pip install -r requirements.txt
