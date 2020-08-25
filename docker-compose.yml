@@ -13,6 +13,6 @@ services:
             - "8080:8000"
         volumes:
             - ./:/app/
-        command: python manage.py runserver 0.0.0.0:8000
+        command: . start.sh
         restart: always
 
