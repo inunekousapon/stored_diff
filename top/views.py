@@ -12,7 +12,9 @@ from django.shortcuts import redirect
 
 import pyodbc
 from . import models
-import pygments
+from pygments import highlight
+from pygments.lexers.sql import SqlLexer
+from pygments.formatters import HtmlFormatter
 
 
 def sp(x):
@@ -120,11 +122,8 @@ class RawView(TemplateView):
         rows = [x for x in models.SchemaMaster.objects.raw(sql, [name])]
         if not rows:
             raise Http404
-
-        lexer = pygments.lexers.get_lexer_by_name('sql')
-        formatter = pygments.formatters.get_formatter_by_name('html', linenos=False, full=True, encoding='utf-8')
-        html = pygments.highlight(rows[0].query, lexer, formatter)
-        context['code'] = html
+        
+        context['code'] = highlight(rows[0].query, SqlLexer(), HtmlFormatter())
         return context
         
 
