@@ -123,7 +123,7 @@ class RawView(TemplateView):
         if not rows:
             raise Http404
         
-        context['code'] = highlight(rows[0].query, SqlLexer(), HtmlFormatter(full=True))
+        context['code'] = highlight(rows[0].query, SqlLexer(), HtmlFormatter(full=True, linenos=True, title=name, wrapcode=True))
         return context
         
 
