@@ -85,6 +85,47 @@ class DetailView(TemplateView):
         return context
 
 
+class RevisionView(TemplateView):
+    template_name = 'rev.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        name = kwargs['name']
+        target = kwargs.get('target', 'dev')
+        revision = kwargs.get('rev', 0)
+        if target == 'dev':
+            db_target = 'top_develop'
+        elif target == 'stg':
+            db_target = 'top_staging'
+        elif target == 'prd':
+            db_target = 'top_production'
+        else:
+            raise Http404
+        sql = '''
+        select
+        mst.id
+        ,mst.name as name
+        ,t.query as query
+        ,t.create_date as create_date
+        from top_schemamaster mst
+        inner join {db_target} t on t.master_id = msg.id
+        where
+        mst.name = %s
+        order by t.create_date desc
+        '''.format(name=name)
+
+        rows = models.SchemaMaster.objects.raw(sql, [name])
+        if not rows:
+            raise Http404
+        cur = rows[revision]["query"]
+        old = rows[revision + 1]["query"]
+        context['diff'] = (
+            difflib.HtmlDiff(tabsize=2, wrapcolumn=80, linejunk=lambda x: x == ' \t\n')
+                .make_table(fromlines=sp(old), tolines=sp(cur), fromdesc=rows[revision]["create_date"], todesc=rows[revision + 1]["create_date"])
+        )
+        return context
+
+
 def connection(server, user, password, db):
     return pyodbc.connect("DRIVER={ODBC Driver 17 for SQL Server};SERVER=" + server + ";uid=" + user + \
                  ";pwd=" + password + ";DATABASE=" + db)

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        
+        <style type="text/css">
+            table.diff {font-family:Courier; border:medium;}
+            .diff_header {background-color:#e0e0e0}
+            td.diff_header {text-align:right}
+            .diff_next {background-color:#c0c0c0}
+            .diff_add {background-color:#aaffaa}
+            .diff_chg {background-color:#ffff77}
+            .diff_sub {background-color:#ffaaaa}
+        </style>
+
+        <style type="text/css">
+            .container {
+            width: 100%;
+            max-width:initial;
+            }
+            .container > .row {
+            margin: 0;
+            }
+            .container > .row > .col {
+            padding: 0;
+            }
+
+            td, th { padding: 0px 0px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+        {{ diff|safe }}
+        </div>
+    </body>
+</html>
