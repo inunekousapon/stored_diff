@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
@@ -158,6 +159,7 @@ def sync(request):
         (models.Staging, settings.STAGING_CONNECTION),
         (models.Production, settings.PRODUCTION_CONNECTION),
     )
+    now = datetime.datetime.now()
     for env, dns in databases:
         with pyodbc.connect(dns) as con:
             with con.cursor() as cur:
@@ -169,17 +171,19 @@ def sync(request):
                         name=row['name'],
                         sysobject_type=row['sysobject_type'].strip()    # 空白文字返るのふざけるな
                     )
+                    hexdigest = hashlib.sha224(row['query'].encode()).hexdigest()
                     q = env.objects.filter(
                         master=master,
-                        create_date=row['create_date']
+                        shahex=hexdigest
                     ).exists()
                     if q:
                         continue
 
                     elems.append(env(
                         master=master,                        
-                        create_date=row['create_date'],
-                        query=row['query']
+                        create_date=now,
+                        query=row['query'],
+                        shahex=hexdigest
                     ))
                 env.objects.bulk_create(elems)
     return redirect('/')

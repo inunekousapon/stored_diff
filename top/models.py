@@ -16,6 +16,7 @@ class Develop(models.Model):
     master = models.ForeignKey(
         'SchemaMaster', on_delete=models.CASCADE)
     query = models.TextField()
+    shahex = models.CharField(max_length=56)
     create_date = models.DateTimeField()
 
 
@@ -23,6 +24,7 @@ class Staging(models.Model):
     master = models.ForeignKey(
         'SchemaMaster', on_delete=models.CASCADE)
     query = models.TextField()
+    shahex = models.CharField(max_length=56)
     create_date = models.DateTimeField()
 
 
@@ -30,4 +32,5 @@ class Production(models.Model):
     master = models.ForeignKey(
         'SchemaMaster', on_delete=models.CASCADE)
     query = models.TextField()
+    shahex = models.CharField(max_length=56)
     create_date = models.DateTimeField()
