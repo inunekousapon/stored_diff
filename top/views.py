@@ -1,5 +1,6 @@
 import datetime
 import hashlib
+import difflib
 
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
@@ -10,8 +11,8 @@ from django.conf import settings
 from django.shortcuts import redirect
 
 import pyodbc
-import difflib
 from . import models
+import pygments
 
 
 def sp(x):
@@ -88,6 +89,44 @@ class DetailView(TemplateView):
         )
         return context
 
+
+class RawView(TemplateView):
+    template_name = 'raw.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        name = kwargs['name']
+        target = kwargs.get('target', 'dev')
+
+        if target == 'dev':
+            db_target = 'top_develop'
+        elif target == 'stg':
+            db_target = 'top_staging'
+        elif target == 'prd':
+            db_target = 'top_production'
+        else:
+            raise Http404
+
+        sql = '''
+        select
+        mst.id
+        ,mst.name as name
+        ,(select query from {} where master_id = mst.id order by create_date desc limit 1) as query
+        from top_schemamaster mst
+        where
+        mst.name = %s
+        '''.format(db_target)
+
+        rows = [x for x in models.SchemaMaster.objects.raw(sql, [name])]
+        if not rows:
+            raise Http404
+
+        lexer = pygments.lexers.get_lexer_by_name('sql')
+        formatter = pygments.formatters.get_formatter_by_name('html', linenos=False, full=True, encoding='utf-8')
+        html = pygments.highlight(rows[0].query, lexer, formatter)
+        context['code'] = html
+        return context
+        
 
 class RevisionView(TemplateView):
     template_name = 'rev.html'

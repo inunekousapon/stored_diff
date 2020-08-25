@@ -2,3 +2,4 @@ Django==2.2.4
 pyodbc==4.0.27
 pytz==2019.2
 sqlparse==0.3.0
+pygments==2.6.1
