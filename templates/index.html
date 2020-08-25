@@ -20,20 +20,20 @@
                     <thead>
                         <tr>
                             <th>オブジェクト名</th>
-                            <th>差分</th>
                             <th>DEVELOP</th>
                             <th>STAGING</th>
                             <th>PRODUCTION</th>
+                            <th>環境差分</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for procedure in procedure_list %}
                         <tr{% if procedure.d_ratio < 1.0 or procedure.s_ratio < 1.0 %} class=" red lighten-5"{% endif %}>
                             <td><a href="./{{ procedure.name }}">{{ procedure.name }}</a></td>
-                            <td><a href="./{{ procedure.name }}">表示</a></td>
-                            <td>{% if procedure.dev_count > 0 %}<a href="./{{ procedure.name}}/dev/raw">コード</a> <a href="./{{ procedure.name}}/dev/0">履歴({{ procedure.dev_count }})</a>{% endif %}</td>
-                            <td>{% if procedure.stg_count > 0 %}<a href="./{{ procedure.name}}/stg/raw">コード</a> <a href="./{{ procedure.name}}/stg/0">履歴({{ procedure.stg_count }})</a>{% endif %}</td>
-                            <td>{% if procedure.prd_count > 0 %}<a href="./{{ procedure.name}}/prd/raw">コード</a> <a href="./{{ procedure.name}}/prd/0">履歴({{ procedure.prd_count }})</a>{% endif %}</td>
+                            <td>{% if procedure.dev_count > 0 %}<a href="./{{ procedure.name}}/dev/raw">SQL</a> | <a href="./{{ procedure.name}}/dev/0">履歴({{ procedure.dev_count }})</a>{% endif %}</td>
+                            <td>{% if procedure.stg_count > 0 %}<a href="./{{ procedure.name}}/stg/raw">SQL</a> | <a href="./{{ procedure.name}}/stg/0">履歴({{ procedure.stg_count }})</a>{% endif %}</td>
+                            <td>{% if procedure.prd_count > 0 %}<a href="./{{ procedure.name}}/prd/raw">SQL</a> | <a href="./{{ procedure.name}}/prd/0">履歴({{ procedure.prd_count }})</a>{% endif %}</td>
+                            <td><a href="./{{ procedure.name }}">環境差分</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
