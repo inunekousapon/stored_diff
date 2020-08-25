@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 from django.utils import timezone
@@ -21,17 +23,21 @@ class IndexView(TemplateView):
     select
         mst.id
         ,mst.name as name
-        ,(select query from top_develop where master_id = mst.id order by create_date desc limit 1) as dev_query
-        ,(select query from top_staging where master_id = mst.id order by create_date desc limit 1) as stg_query
-        ,(select query from top_production where master_id = mst.id order by create_date desc limit 1) as prd_query
+        ,(select query from top_develop where master_id = mst.id where create_date < '%s' order by create_date desc limit 1) as dev_query
+        ,(select query from top_staging where master_id = mst.id where create_date < '%s' order by create_date desc limit 1) as stg_query
+        ,(select query from top_production where master_id = mst.id where create_date < '%s' order by create_date desc limit 1) as prd_query
         from top_storedproceduremaster mst
+        where
+        mst.sysobject_type = '%s'
     '''
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
+        now = self.request.GET.get('date', datetime.datetime.now())
+        sysobject_type = self.request.GET.get('type', 'IF')
         procedure_list = []
-        for row in models.StoredProcedureMaster.objects.raw(IndexView.sql):
+        for row in models.StoredProcedureMaster.objects.raw(IndexView.sql, [now, now, now, sysobject_type]):
             dev = row.dev_query if row.dev_query else ''
             stg = row.stg_query if row.stg_query else ''
             prd = row.prd_query if row.prd_query else ''
@@ -83,13 +89,16 @@ def connection(server, user, password, db):
                  ";pwd=" + password + ";DATABASE=" + db)
 
 
-schema_sql = '''select sysobjects.name as name
+sysobjects_types = ','.join([x[0] for x in models.SYS_OBJECT_TYPE])
+
+schema_sql = f'''select sysobjects.name as name
       ,sys.sql_modules.definition as query
+      ,sysobjects.type as sysobject_type
       ,sysobjects.crdate as create_date
 FROM   sys.sql_modules
 LEFT OUTER JOIN sysobjects
 ON  sysobjects.id = sys.sql_modules.object_id
-WHERE sysobjects.type ='P'
+WHERE sysobjects.type in ({sysobjects_types})
 ORDER BY sysobjects.name'''
 
 
@@ -107,7 +116,8 @@ def sync(request):
                 elems = []
                 for row in [dict(zip([col[0] for col in desc], row)) for row in cur.fetchall()]:
                     master, created = models.StoredProcedureMaster.objects.get_or_create(
-                        name=row['name']
+                        name=row['name'],
+                        sysobject_type=row['sysobject_type']
                     )
                     q = env.objects.filter(
                         master=master,
