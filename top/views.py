@@ -26,7 +26,7 @@ class IndexView(TemplateView):
         ,(select query from top_develop where master_id = mst.id and create_date < '%s' order by create_date desc limit 1) as dev_query
         ,(select query from top_staging where master_id = mst.id and create_date < '%s' order by create_date desc limit 1) as stg_query
         ,(select query from top_production where master_id = mst.id and create_date < '%s' order by create_date desc limit 1) as prd_query
-        from top_storedproceduremaster mst
+        from top_schemamaster mst
         where
         mst.sysobject_type = '%s'
     '''
@@ -61,7 +61,7 @@ class DetailView(TemplateView):
         ,(select query from top_develop where master_id = mst.id order by create_date desc limit 1) as dev_query
         ,(select query from top_staging where master_id = mst.id order by create_date desc limit 1) as stg_query
         ,(select query from top_production where master_id = mst.id order by create_date desc limit 1) as prd_query
-        from top_storedproceduremaster mst
+        from top_schemamaster mst
         where
         mst.name = '{name}'
         '''.format(name=name)
