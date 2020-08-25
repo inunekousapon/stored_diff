@@ -114,9 +114,12 @@ class RevisionView(TemplateView):
         order by t.create_date desc
         '''.format(db_target)
 
-        rows = models.SchemaMaster.objects.raw(sql, [name])
+        rows = [x for x in models.SchemaMaster.objects.raw(sql, [name])]
         if not rows:
             raise Http404
+        if revision + 1 >= len(rows):
+            return redirect('/' + name)
+        
         cur = rows[revision].query
         old = rows[revision + 1].query
         context['diff'] = (
