@@ -131,7 +131,7 @@ class RevisionView(TemplateView):
             old_date = rows[revision + 1].create_date
         context['diff'] = (
             difflib.HtmlDiff(tabsize=2, wrapcolumn=80, linejunk=lambda x: x == ' \t\n')
-                .make_table(fromlines=sp(old), tolines=sp(cur), fromdesc=cur_date, todesc=old_date)
+                .make_table(fromlines=sp(old), tolines=sp(cur), fromdesc=old_date, todesc=cur_date)
         )
         return context
 

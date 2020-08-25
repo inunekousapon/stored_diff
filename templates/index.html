@@ -29,9 +29,9 @@
                         {% for procedure in procedure_list %}
                         <tr{% if procedure.d_ratio < 1.0 or procedure.s_ratio < 1.0 %} class=" red lighten-5"{% endif %}>
                             <td><a href="./{{ procedure.name }}">{{ procedure.name }}</a></td>
-                            <td>{{ procedure.d_ratio }}</td>
-                            <td>{{ procedure.s_ratio }}</td>
-                            <td></td>
+                            <td><a href="./{{ procedure.name}}/dev/0">履歴表示</a></td>
+                            <td><a href="./{{ procedure.name}}/stg/0">履歴表示</a></td>
+                            <td><a href="./{{ procedure.name}}/prd/0">履歴表示</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
