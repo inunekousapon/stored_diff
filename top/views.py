@@ -34,8 +34,8 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
-        now = self.kwargs.get('date', datetime.datetime.now())
-        sysobject_type = self.kwargs.get('type', 'IF')
+        now = kwargs.get('date', datetime.datetime.now())
+        sysobject_type = kwargs.get('type', 'IF')
         procedure_list = []
         for row in models.SchemaMaster.objects.raw(IndexView.sql, [now, now, now, sysobject_type]):
             dev = row.dev_query if row.dev_query else ''
