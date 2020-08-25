@@ -23,9 +23,9 @@ class IndexView(TemplateView):
     select
         mst.id
         ,mst.name as name
-        ,(select query from top_develop where master_id = mst.id where create_date < '%s' order by create_date desc limit 1) as dev_query
-        ,(select query from top_staging where master_id = mst.id where create_date < '%s' order by create_date desc limit 1) as stg_query
-        ,(select query from top_production where master_id = mst.id where create_date < '%s' order by create_date desc limit 1) as prd_query
+        ,(select query from top_develop where master_id = mst.id and create_date < '%s' order by create_date desc limit 1) as dev_query
+        ,(select query from top_staging where master_id = mst.id and create_date < '%s' order by create_date desc limit 1) as stg_query
+        ,(select query from top_production where master_id = mst.id and create_date < '%s' order by create_date desc limit 1) as prd_query
         from top_storedproceduremaster mst
         where
         mst.sysobject_type = '%s'
