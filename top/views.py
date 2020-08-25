@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.db import connection
 from django.http import Http404
 from django.conf import settings
+from django.shortcuts import redirect
 
 import pyodbc
 import difflib
@@ -130,4 +131,4 @@ def sync(request):
                         query=row['query']
                     ))
                 env.objects.bulk_create(elems)
-    return HttpResponse('sync')
+    return redirect('/')
