@@ -117,14 +117,21 @@ class RevisionView(TemplateView):
         rows = [x for x in models.SchemaMaster.objects.raw(sql, [name])]
         if not rows:
             raise Http404
-        if revision + 1 >= len(rows):
-            return redirect('/' + name)
-        
-        cur = rows[revision].query
-        old = rows[revision + 1].query
+        if revision + 1 == len(rows):
+            cur = ''
+            cur_date = ''
+            old = rows[revision].query
+            old_date = rows[revision].create_date
+        elif revision + 1 > len(rows):
+            raise Http404
+        else:
+            cur = rows[revision].query
+            cur_date = rows[revision].create_date
+            old = rows[revision + 1].query
+            old_date = rows[revision + 1].create_date
         context['diff'] = (
             difflib.HtmlDiff(tabsize=2, wrapcolumn=80, linejunk=lambda x: x == ' \t\n')
-                .make_table(fromlines=sp(old), tolines=sp(cur), fromdesc=rows[revision].create_date, todesc=rows[revision + 1].create_date)
+                .make_table(fromlines=sp(old), tolines=sp(cur), fromdesc=cur_date, todesc=old_date)
         )
         return context
 
