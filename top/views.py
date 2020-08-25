@@ -113,12 +113,10 @@ def sync(request):
                 desc = cur.description
                 elems = []
                 for row in [dict(zip([col[0] for col in desc], row)) for row in cur.fetchall()]:
-                    master, created = models.SchemaMaster.objects.get_or_create(
-                        name=row['name']
+                    master, created = models.SchemaMaster.objects.update_or_create(
+                        name=row['name'],
+                        sysobject_type=row['sysobject_type']
                     )
-                    if created:
-                        master.sysobject_type=row['sysobject_type']
-                        master.save()
                     q = env.objects.filter(
                         master=master,
                         create_date=row['create_date']
