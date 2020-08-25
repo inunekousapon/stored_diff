@@ -33,4 +33,4 @@ COPY ./ $APP_ROOT
 
 RUN pip install -r requirements.txt
 
-EXPOSE 8080
+EXPOSE 8080 8000
