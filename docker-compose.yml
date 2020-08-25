@@ -1,0 +1,18 @@
+version: '3'
+services:
+    stored_diff:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        hostname: stored_diff
+        environment:
+            DEVELOP_DNS: 
+            STAGING_DNS: 
+            PRODUCTION_DNS:
+        ports:
+            - "8000:8080"
+        volumes:
+            - ./:/app/
+        command: python src/manage.py runserver 0.0.0.0:8080
+        restart: always
+
