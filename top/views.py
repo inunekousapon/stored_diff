@@ -108,7 +108,7 @@ class RevisionView(TemplateView):
         ,t.query as query
         ,t.create_date as create_date
         from top_schemamaster mst
-        inner join {} t on t.master_id = msg.id
+        inner join {} t on t.master_id = mst.id
         where
         mst.name = %s
         order by t.create_date desc
