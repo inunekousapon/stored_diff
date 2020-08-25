@@ -37,7 +37,7 @@ class IndexView(TemplateView):
         now = self.request.GET.get('date', datetime.datetime.now())
         sysobject_type = self.request.GET.get('type', 'IF')
         procedure_list = []
-        for row in models.StoredProcedureMaster.objects.raw(IndexView.sql, [now, now, now, sysobject_type]):
+        for row in models.SchemaMaster.objects.raw(IndexView.sql, [now, now, now, sysobject_type]):
             dev = row.dev_query if row.dev_query else ''
             stg = row.stg_query if row.stg_query else ''
             prd = row.prd_query if row.prd_query else ''
@@ -66,7 +66,7 @@ class DetailView(TemplateView):
         mst.name = '{name}'
         '''.format(name=name)
 
-        rows = models.StoredProcedureMaster.objects.raw(sql)
+        rows = models.SchemaMaster.objects.raw(sql)
         if not rows:
             raise Http404
         row = rows[0]
@@ -115,7 +115,7 @@ def sync(request):
                 desc = cur.description
                 elems = []
                 for row in [dict(zip([col[0] for col in desc], row)) for row in cur.fetchall()]:
-                    master, created = models.StoredProcedureMaster.objects.get_or_create(
+                    master, created = models.SchemaMaster.objects.get_or_create(
                         name=row['name'],
                         sysobject_type=row['sysobject_type']
                     )
