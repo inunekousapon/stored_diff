@@ -115,7 +115,7 @@ def sync(request):
                 for row in [dict(zip([col[0] for col in desc], row)) for row in cur.fetchall()]:
                     master, created = models.SchemaMaster.objects.update_or_create(
                         name=row['name'],
-                        sysobject_type=row['sysobject_type']
+                        sysobject_type=row['sysobject_type'].strip()    # 空白文字返るのふざけるな
                     )
                     q = env.objects.filter(
                         master=master,
