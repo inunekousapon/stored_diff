@@ -108,11 +108,11 @@ class RevisionView(TemplateView):
         ,t.query as query
         ,t.create_date as create_date
         from top_schemamaster mst
-        inner join {db_target} t on t.master_id = msg.id
+        inner join {} t on t.master_id = msg.id
         where
         mst.name = %s
         order by t.create_date desc
-        '''.format(name=name)
+        '''.format(db_target)
 
         rows = models.SchemaMaster.objects.raw(sql, [name])
         if not rows:
