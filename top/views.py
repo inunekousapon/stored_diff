@@ -89,7 +89,7 @@ def connection(server, user, password, db):
                  ";pwd=" + password + ";DATABASE=" + db)
 
 
-sysobjects_types = ','.join([x[0] for x in models.SYS_OBJECT_TYPE])
+sysobjects_types = ','.join(["'" + x[0] + "'" for x in models.SYS_OBJECT_TYPE])
 
 schema_sql = f'''select sysobjects.name as name
       ,sys.sql_modules.definition as query
