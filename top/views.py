@@ -26,8 +26,11 @@ class IndexView(TemplateView):
         mst.id
         ,mst.name as name
         ,(select query from top_develop where master_id = mst.id and create_date < %s order by create_date desc limit 1) as dev_query
+        ,(select count(1) from top_develop where master_id = mst.id) as dev_count
         ,(select query from top_staging where master_id = mst.id and create_date < %s order by create_date desc limit 1) as stg_query
+        ,(select count(1) from top_staging where master_id = mst.id) as stg_count
         ,(select query from top_production where master_id = mst.id and create_date < %s order by create_date desc limit 1) as prd_query
+        ,(select count(1) from top_production where master_id = mst.id) as prd_count
         from top_schemamaster mst
         where
         mst.sysobject_type = %s
