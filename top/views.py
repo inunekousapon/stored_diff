@@ -34,8 +34,8 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
-        now = kwargs.get('date', datetime.datetime.now())
-        sysobject_type = kwargs.get('type', 'IF')
+        now = self.request.GET.getlist('date', [datetime.datetime.now()])[0]
+        sysobject_type = self.request.GET.getlist('type', ['IF'])[0]
         procedure_list = []
         for row in models.SchemaMaster.objects.raw(IndexView.sql, [now, now, now, sysobject_type]):
             dev = row.dev_query if row.dev_query else ''
@@ -116,9 +116,11 @@ def sync(request):
                 elems = []
                 for row in [dict(zip([col[0] for col in desc], row)) for row in cur.fetchall()]:
                     master, created = models.SchemaMaster.objects.get_or_create(
-                        name=row['name'],
-                        sysobject_type=row['sysobject_type']
+                        name=row['name']
                     )
+                    if created:
+                        master.sysobject_type=row['sysobject_type']
+                        master.save()
                     q = env.objects.filter(
                         master=master,
                         create_date=row['create_date']
