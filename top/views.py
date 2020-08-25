@@ -89,16 +89,14 @@ def connection(server, user, password, db):
                  ";pwd=" + password + ";DATABASE=" + db)
 
 
-sysobjects_types = ','.join(["'" + x[0] + "'" for x in models.SYS_OBJECT_TYPE])
-
-schema_sql = f'''select sysobjects.name as name
+schema_sql = '''select sysobjects.name as name
       ,sys.sql_modules.definition as query
       ,sysobjects.type as sysobject_type
       ,sysobjects.crdate as create_date
 FROM   sys.sql_modules
 LEFT OUTER JOIN sysobjects
 ON  sysobjects.id = sys.sql_modules.object_id
-WHERE sysobjects.type in ({sysobjects_types})
+WHERE sysobjects.type in ('IF', 'P', 'V')
 ORDER BY sysobjects.name'''
 
 
