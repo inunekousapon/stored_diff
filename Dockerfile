@@ -35,4 +35,4 @@ RUN pip install -r requirements.txt
 
 RUN chmod +x $APP_ROOT/start.sh
 
-EXPOSE 8080 8000
+EXPOSE 8000
