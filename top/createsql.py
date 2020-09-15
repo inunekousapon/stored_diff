@@ -165,6 +165,6 @@ SELECT 'CREATE TABLE ' + @object_name + CHAR(13) + '(' + CHAR(13) + STUFF((
         for usertable in usertables:
             self.cursor.execute(query, [f'dbo.{ usertable.name }'])
             row = self.cursor.fetchone()
-            if row:
+            if row and row[0] is not None:
                 data.append((usertable.name, row[0]))
         return data

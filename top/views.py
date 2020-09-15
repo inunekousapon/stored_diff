@@ -213,7 +213,8 @@ def sync(request):
                         name=row['name'],
                         sysobject_type=row['sysobject_type'].strip()    # 空白文字返るのふざけるな
                     )
-                    hexdigest = hashlib.sha224(row['query'].encode()).hexdigest()
+                    query = row['query'] if row is not None else ''
+                    hexdigest = hashlib.sha224(query.encode()).hexdigest()
                     q = env.objects.filter(
                         master=master,
                         shahex=hexdigest
@@ -224,7 +225,7 @@ def sync(request):
                     elems.append(env(
                         master=master,                        
                         create_date=now,
-                        query=row['query'],
+                        query=query,
                         shahex=hexdigest
                     ))
                 tablelist = TableList(cursor=cur)
