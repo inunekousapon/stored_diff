@@ -27,6 +27,7 @@ DECLARE
       @object_name SYSNAME
     , @object_id INT
 ​
+
 SELECT 
       @object_name = '[' + s.name + '].[' + o.name + ']'
     , @object_id = o.[object_id]
@@ -165,5 +166,5 @@ SELECT 'CREATE TABLE ' + @object_name + CHAR(13) + '(' + CHAR(13) + STUFF((
             self.cursor.execute(query, [f'dbo.{ usertable.name }'])
             row = self.cursor.fetchone()
             if row:
-                data.append(usertable.name, row[0])
+                data.append((usertable.name, row[0]))
         return data
