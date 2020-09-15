@@ -11,7 +11,7 @@ class TableList:
     def makedata(self):
         query = "select name, object_id from sys.objects where type = 'U'"
         self.cursor.execute(query)
-        return [UserTable(*row) for row in cursor.fetchall()]
+        return [UserTable(*row) for row in self.cursor.fetchall()]
 
 
 class TableSchemas:
