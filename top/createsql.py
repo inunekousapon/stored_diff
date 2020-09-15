@@ -21,7 +21,7 @@ class TableSchemas:
     def makedata(self, usertables):
         query = '''
 DECLARE @table_name SYSNAME
-SELECT @table_name = %s
+SELECT @table_name = ?
 ​
 DECLARE 
       @object_name SYSNAME
