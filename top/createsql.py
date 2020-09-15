@@ -10,7 +10,7 @@ class TableList:
 
     def makedata(self):
         query = "select name, object_id from sys.objects where type = 'U'"
-        cursor.execute(query)
+        self.cursor.execute(query)
         return [UserTable(*row) for row in cursor.fetchall()]
 
 
@@ -162,8 +162,8 @@ SELECT 'CREATE TABLE ' + @object_name + CHAR(13) + '(' + CHAR(13) + STUFF((
     ), '')'''
         data = []
         for usertable in usertables:
-            cursor.execute(query, [f'dbo.{ usertable.name }'])
-            row = cursor.fetchone()
+            self.cursor.execute(query, [f'dbo.{ usertable.name }'])
+            row = self.cursor.fetchone()
             if row:
                 data.append(usertable.name, row[0])
         return data
