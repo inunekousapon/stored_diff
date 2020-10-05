@@ -257,25 +257,25 @@ def sync(request):
                             shahex=hexdigest,
                         )
                     )
-                tablelist = TableList(cursor=cur)
-                tablescheme = TableSchemas(cursor=cur)
-                usertables = tablelist.makedata()
-                for row in tablescheme.makedata(usertables):
-                    master, created = models.SchemaMaster.objects.update_or_create(
-                        name=row[0], sysobject_type="U"
-                    )
-                    hexdigest = hashlib.sha224(row[1].encode()).hexdigest()
-                    q = env.objects.filter(master=master, shahex=hexdigest).exists()
-                    if q:
-                        continue
-                    elems.append(
-                        env(
-                            master=master,
-                            create_date=now,
-                            query=row[1],
-                            shahex=hexdigest,
-                        )
-                    )
+                #tablelist = TableList(cursor=cur)
+                #tablescheme = TableSchemas(cursor=cur)
+                #usertables = tablelist.makedata()
+                #for row in tablescheme.makedata(usertables):
+                #    master, created = models.SchemaMaster.objects.update_or_create(
+                #        name=row[0], sysobject_type="U"
+                #    )
+                #    hexdigest = hashlib.sha224(row[1].encode()).hexdigest()
+                #    q = env.objects.filter(master=master, shahex=hexdigest).exists()
+                #    if q:
+                #        continue
+                #    elems.append(
+                #        env(
+                #            master=master,
+                #            create_date=now,
+                #            query=row[1],
+                #            shahex=hexdigest,
+                #        )
+                #    )
                 env.objects.bulk_create(elems)
 
     return redirect("/")
