@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 
-UserTable = namedtuple('UserTable', ["name", "object_id"])
+UserTable = namedtuple("UserTable", ["name", "object_id"])
 
 
 class TableList:
@@ -19,7 +19,7 @@ class TableSchemas:
         self.cursor = cursor
 
     def makedata(self, usertables):
-        query = '''
+        query = """
 DECLARE @table_name SYSNAME
 SELECT @table_name = ?
 ​
@@ -160,10 +160,10 @@ SELECT 'CREATE TABLE ' + @object_name + CHAR(13) + '(' + CHAR(13) + STUFF((
             AND i.is_primary_key = 0
             AND i.[type] = 2
         FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)')
-    ), '')'''
+    ), '')"""
         data = []
         for usertable in usertables:
-            self.cursor.execute(query, [f'dbo.{ usertable.name }'])
+            self.cursor.execute(query, [f"dbo.{ usertable.name }"])
             row = self.cursor.fetchone()
             if row and row[0] is not None:
                 data.append((usertable.name, row[0]))

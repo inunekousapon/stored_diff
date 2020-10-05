@@ -1,11 +1,8 @@
 from django.db import models
 
 
-SYS_OBJECT_TYPE = (
-    ('IF', 'SQL インライン テーブル値関数'),
-    ('P', 'ストアドプロシージャ'),
-    ('V', 'ビュー')
-)
+SYS_OBJECT_TYPE = (("IF", "SQL インライン テーブル値関数"), ("P", "ストアドプロシージャ"), ("V", "ビュー"))
+
 
 class SchemaMaster(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -13,24 +10,21 @@ class SchemaMaster(models.Model):
 
 
 class Develop(models.Model):
-    master = models.ForeignKey(
-        'SchemaMaster', on_delete=models.CASCADE)
+    master = models.ForeignKey("SchemaMaster", on_delete=models.CASCADE)
     query = models.TextField()
     shahex = models.CharField(max_length=56)
     create_date = models.DateTimeField()
 
 
 class Staging(models.Model):
-    master = models.ForeignKey(
-        'SchemaMaster', on_delete=models.CASCADE)
+    master = models.ForeignKey("SchemaMaster", on_delete=models.CASCADE)
     query = models.TextField()
     shahex = models.CharField(max_length=56)
     create_date = models.DateTimeField()
 
 
 class Production(models.Model):
-    master = models.ForeignKey(
-        'SchemaMaster', on_delete=models.CASCADE)
+    master = models.ForeignKey("SchemaMaster", on_delete=models.CASCADE)
     query = models.TextField()
     shahex = models.CharField(max_length=56)
     create_date = models.DateTimeField()
