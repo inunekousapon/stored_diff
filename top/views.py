@@ -67,7 +67,7 @@ class IndexView(TemplateView):
             procedure_list.append(row)
         context["procedure_list"] = procedure_list
         context["sysobject_type"] = sysobject_type
-        context["keyword"] = keyword
+        context["keyword"] = keyword if keyword else ""
         return context
 
 
