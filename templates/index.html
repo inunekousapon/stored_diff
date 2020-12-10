@@ -12,6 +12,15 @@
     <body>
         <section class="section">
             <div class="container">
+                <form method="GET" name="search" action="/">
+                    <div class="row">
+                        <div class="input-field col s4 offset-s8">
+                            <i class="material-icons prefix">search</i>
+                            <input placeholder="キーワード検索" id="keyword" name="keyword" type="text" class="validate" value="{{ keyword }}">
+                            <input type="hidden" name="type" value="{{ sysobject_type }}">
+                        </div>
+                    </div>
+                </form>
                 <a class="waves-effect waves-light btn" href="/?type=IF">SQL インライン テーブル値関数</a>
                 <a class="waves-effect waves-light btn" href="/?type=P">ストアドプロシージャ</a>
                 <a class="waves-effect waves-light btn" href="/?type=U">テーブル定義</a>
