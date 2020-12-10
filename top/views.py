@@ -51,13 +51,13 @@ class IndexView(TemplateView):
         for row in models.SchemaMaster.objects.raw(
             IndexView.sql, [now, now, now, sysobject_type]
         ):
-            # キーワード検索するとき、クエリに一つも含まれなければ無視する
-            if keyword:
-                if ((keyword not in row.dev_query) and (keyword not in row.stg_query) and (keyword not in row.prd_query)):
-                    continue
             dev = row.dev_query if row.dev_query else ""
             stg = row.stg_query if row.stg_query else ""
             prd = row.prd_query if row.prd_query else ""
+            # キーワード検索するとき、クエリに一つも含まれなければ無視する
+            if keyword:
+                if ((keyword not in dev) and (keyword not in stg) and (keyword not in prd)):
+                    continue
             row.d_ratio = difflib.SequenceMatcher(
                 lambda x: x == " \t", sp(dev), sp(stg)
             ).ratio()
