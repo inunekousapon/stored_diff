@@ -46,7 +46,7 @@ class IndexView(TemplateView):
         context["now"] = timezone.now()
         now = self.request.GET.getlist("date", [datetime.datetime.now()])[0]
         sysobject_type = self.request.GET.getlist("type", ["IF"])[0]
-        keyword = self.request.GET.getlist("keyword", None)[0]
+        keyword = self.request.GET.get("keyword", None)
         procedure_list = []
         for row in models.SchemaMaster.objects.raw(
             IndexView.sql, [now, now, now, sysobject_type]
