@@ -46,10 +46,15 @@ class IndexView(TemplateView):
         context["now"] = timezone.now()
         now = self.request.GET.getlist("date", [datetime.datetime.now()])[0]
         sysobject_type = self.request.GET.getlist("type", ["IF"])[0]
+        keyword = self.request.GET.getlist("keyword", None)[0]
         procedure_list = []
         for row in models.SchemaMaster.objects.raw(
             IndexView.sql, [now, now, now, sysobject_type]
         ):
+            # キーワード検索するとき、クエリに一つも含まれなければ無視する
+            if keyword:
+                if ((keyword not in row.dev_query) and (keyword not in row.stg_query) and (keyword not in row.prd_query)):
+                    continue
             dev = row.dev_query if row.dev_query else ""
             stg = row.stg_query if row.stg_query else ""
             prd = row.prd_query if row.prd_query else ""
@@ -61,6 +66,7 @@ class IndexView(TemplateView):
             ).ratio()
             procedure_list.append(row)
         context["procedure_list"] = procedure_list
+        context["sysobject_type"] = sysobject_type
         return context
 
 
